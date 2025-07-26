@@ -21,12 +21,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,15 +40,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.guardiannet.Data.Caretaker
 import com.example.guardiannet.Data.Patient
 import com.example.guardiannet.R
+import com.example.guardiannet.ui.theme.Poppins
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,25 +60,25 @@ fun HomeScreen(
     onProfileClick: () -> Unit = {}
 ) {
     // Hardcoded data - replace with actual data when backend is ready
+    val caretaker = Caretaker(
+        name = "Rohan Nalawade",
+        address = "Sainagar, Pune",
+        contact = "8975785013"
+    )
     val myPatients = listOf(
         Patient(
             id = "1",
             name = "Vinod Krishna",
-            lastCheckIn = "2 mins ago",
+            caretaker = caretaker
         ),
-        Patient(
-            id = "2",
-            name = "Yash Kamble",
-            lastCheckIn = "5 hours ago",
-        )
     )
 
     val nearbyRequests = listOf(
         Patient(
-            id = "3",
-            name = "Lorem Ipsum",
-            lastCheckIn = "Just now",
-        )
+            id = "1",
+            name = "Vinod Krishna",
+            caretaker = caretaker
+        ),
     )
 
     Scaffold(
@@ -88,7 +86,7 @@ fun HomeScreen(
             HomeTopBar(onProfileClick = onProfileClick)
         },
         bottomBar = {
-            HomeBottomBar(onAddPatientClick = onAddPatientClick)
+            BottomNavigation()
         },
         containerColor = Color(0xFFF5F5F7)
     ) { paddingValues ->
@@ -162,89 +160,89 @@ fun HomeTopBar(onProfileClick: () -> Unit) {
 
 // Bottom Bar Component
 @Composable
-fun HomeBottomBar(onAddPatientClick: () -> Unit) {
+fun BottomNavigation() {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
         color = Color.White,
-        shadowElevation = 8.dp
+        shadowElevation = 4.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .height(77.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BottomBarItem(
-                icon = Icons.Default.Home,
-                label = "Home",
-                isSelected = true,
-                onClick = { /* Already on home */ }
-            )
-
-            // Add Patient Button
-            Button(
-                onClick = onAddPatientClick,
-                modifier = Modifier
-                    .height(48.dp)
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF0A2540)
-                )
+            // Home
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable {
+                    //navController.navigate(PayMatesScreens.HomeScreen.name)
+                }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Patient",
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp)
+                    imageVector = Icons.Rounded.Home,
+                    contentDescription = "Home",
+                    modifier = Modifier
+                        .height(28.dp)
+                        .width(28.dp),
+                    tint = Color(0xFF607D8B)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Add Patient",
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    text = "Home",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = Poppins,
+                    color = Color(0xFF607D8B)
                 )
             }
 
-            BottomBarItem(
-                icon = Icons.Default.Person,
-                label = "Profile",
-                isSelected = false,
-                onClick = { /* Navigate to profile */ }
-            )
+            // New Scan (centered and elevated)
+            Box(
+                modifier = Modifier
+                    //.offset(y = (-16).dp)
+                    .background(Color(0xFF0A2540), shape = RoundedCornerShape(20.dp))
+                    .clickable {  }
+                    .padding(horizontal = 24.dp, vertical = 10.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Add Patient", color = Color.White, fontSize = 12.sp , fontFamily = Poppins)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add",
+                        tint = Color.White,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+
+            // Profile
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable {
+                    //navController.navigate(PayMatesScreens.ProfileScreen.name)
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Profile",
+                    modifier = Modifier
+                        .height(28.dp)
+                        .width(28.dp),
+                    tint = Color(0xFF607D8B)
+                )
+                Text(
+                    text = "Profile",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = Poppins,
+                    color = Color(0xFF607D8B)
+                )
+            }
         }
     }
 }
 
-// Bottom Bar Item Component
-@Composable
-fun BottomBarItem(
-    icon: ImageVector,
-    label: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { onClick() }
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = if (isSelected) Color(0xFF0A2540) else Color(0xFF9E9E9E),
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = if (isSelected) Color(0xFF0A2540) else Color(0xFF9E9E9E),
-            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
-        )
-    }
-}
 
 // Section Header Component
 @Composable
@@ -334,7 +332,7 @@ fun PatientCard(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = patient.lastCheckIn,
+                        text = patient.status,
                         fontSize = 12.sp,
                         color = Color(0xFF9E9E9E)
                     )

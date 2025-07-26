@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.guardiannet.PatientTracking.PatientLocationScreen
 import com.example.guardiannet.PatientTracking.TrackPatientScreen
 import com.example.guardiannet.ui.theme.GuardianNetTheme
 
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
             GuardianNetTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     //call the app navigation here
-                    TrackPatientScreen()
+                    PatientLocationScreen()
                 }
             }
         }
